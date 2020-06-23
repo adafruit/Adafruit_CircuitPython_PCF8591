@@ -61,7 +61,21 @@ To install in a virtual environment in your current project:
 Usage Example
 =============
 
-.. todo:: Add a quick, simple example. It and other examples should live in the examples folder and be included in docs/examples.rst.
+.. code-block:: python3
+
+import board
+import adafruit_pcf8591
+import time
+
+i2c = board.I2C()
+pcf = adafruit_pcf8591.PCF8591(i2c)
+
+while True:
+  read_value = pcf.analog_read(0)
+  print("Read value:", read_value, "scaled value: %0.2f V"%((read_value/255)*3.3))
+  time.sleep(.1)
+
+
 
 Contributing
 ============

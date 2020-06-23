@@ -59,11 +59,9 @@ class PCF8591:
     def analog_read(self, adcnum):
         """Read an analog value from one of the four ADC inputs
 
-      :param adcnum The single-ended ADC to read from, 0 thru 3
-      """
-
-        self._buffer = bytearray([2])
-
+        :param adcnum The single-ended ADC to read from, 0 thru 3
+        """
+        self._buffer = bytearray(2)
         if self._dacenable:
             self._buffer[0] = _PCF8591_ENABLE_DAC
             self._buffer[1] = self._dacval
@@ -73,10 +71,8 @@ class PCF8591:
         self._buffer[0] |= adcnum & 0x3
 
         with self.i2c_device as i2c:
-            i2c.write_then_readinto(
-                self._buffer, self._buffer, out_start=0, out_end=2, in_start=0, in_end=2
-            )
-        return unpack_from(">B", self._buffer)[1]
+            i2c.write_then_readinto(self._buffer, self._buffer)
+        return unpack_from(">B", self._buffer[1:])[0]
 
 
 # /**
