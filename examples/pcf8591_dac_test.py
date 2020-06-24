@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: MIT
 import time
 import board
-import adafruit_pcf8591
+from adafruit_pcf8591.pcf8591 import PCF8591
 
 VOLTAGE_LEVEL = 3.3
 DAC_VALUE = 255
 i2c = board.I2C()
 
-pcf = adafruit_pcf8591.PCF8591(i2c)
+pcf = PCF8591(i2c)
 print("enabling DAC")
 pcf.dac_enabled = True
 while True:
