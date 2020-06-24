@@ -50,8 +50,19 @@ class AnalogOut:
         return self._value
 
     @value.setter
-    def value(self, new_value): # this may have to scale from 16-bit
-        self._pcf.analog_write(new_value)
+    def value(self, new_value):  # this may have to scale from 16-bit
+        if new_value < 0 or new_value > 65535:
+            raise ValueError("value must be a 16-bit integer from 0-65535")
 
+        if not self._pcf.dac_enabled:
+            raise RuntimeError(
+                "Underlying DAC is disabled, likely due to callint `deinit`"
+            )
+        # underlying sensor is 8-bit, so scale accordingly
+        self._pcf.analog_write(new_value >> 8)
         self._value = new_value
 
+    def deinit():
+        """Disable the underlying DAC and release the reference to the PCF8591. Create a new AnalogOut to use it again."""
+        self._pcf.dac_enabled = False
+        self._pcf = None

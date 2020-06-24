@@ -31,23 +31,36 @@ AnalogIn for ADC readings.
 class AnalogIn:
     """AnalogIn Mock Implementation for ADC Reads."""
 
-    def __init__(self, ads, pin):
+    def __init__(self, pcf, pin):
         """AnalogIn
 
         :param ads: The PCF8591 object.
         :param ~digitalio.DigitalInOut pin: Required pin for single-ended.
 
         """
-        self._ads = ads
+        self._pcf = pcf
         self._channel_number = pin
 
     @property
     def value(self):
         """Returns the value of an ADC pin scaled to a 16-bit integer from the native value."""
-        return self._ads.analog_read(self._channel_number) << 8
 
-    # @property
-    # def voltage(self):
-    #     """Returns the voltage from the ADC pin as a floating point value."""
-    #     volts = self.value * _ADS1X15_PGA_RANGE[self._ads.gain] / 32767
-    #     return volts
+        if not self._pcf:
+            raise RuntimeError(
+                "Underlying ADC does not exist, likely due to callint `deinit`"
+            )
+
+        return self._pcf.analog_read(self._channel_number) << 8
+
+    @property
+    def reference_voltage(self):
+        """The maximum voltage measurable (also known as the reference voltage) as a float in Volts. Assumed to be 3.3V but can be overridden using the `PCF8591` constructor"""
+        if not self._pcf:
+            raise RuntimeError(
+                "Underlying ADC does not exist, likely due to callint `deinit`"
+            )
+        return self._pcf.reference_voltage
+
+    def deinit(self):
+        """Release the reference to the PCF8591. Create a new AnalogIn to use it again."""
+        self._pcf = None
