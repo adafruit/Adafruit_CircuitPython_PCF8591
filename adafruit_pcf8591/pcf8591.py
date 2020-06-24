@@ -69,7 +69,8 @@ class PCF8591:
 
     @property
     def reference_voltage(self):
-        """The voltage level that ADC signals are compared to. An ADC value of 65535 will equal `reference_voltage`"""
+        """The voltage level that ADC signals are compared to.
+        An ADC value of 65535 will equal `reference_voltage`"""
         return self._reference_voltage
 
     def analog_read(self, channel):
