@@ -36,87 +36,66 @@ from struct import unpack_from
 from micropython import const
 import adafruit_bus_device.i2c_device as i2c_device
 
-# from adafruit_register.i2c_struct import UnaryStruct
-# from adafruit_register.i2c_struct_array import StructArray
-# from adafruit_register.i2c_bit import RWBit
-
 _PCF8591_DEFAULT_ADDR = const(0x48)  # PCF8591 Default Address
 _PCF8591_ENABLE_DAC = const(0x40)  # control bit for having the DAC active
 
 
 class PCF8591:
     """Driver for the PCF8591 DAC & ADC Combo breakout.
+
     :param ~busio.I2C i2c_bus: The I2C bus the PCF8591 is connected to.
     :param address: The I2C device address for the sensor. Default is ``0x28``.
+
     """
 
     def __init__(self, i2c_bus, address=_PCF8591_DEFAULT_ADDR):
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         self._dacval = 0
-        self._dacenable = False
+        self._dac_enabled = False
         self._buffer = bytearray(2)
 
-    def analog_read(self, adcnum):
+    def analog_read(self, adc_channel):
         """Read an analog value from one of the four ADC inputs
 
-        :param adcnum The single-ended ADC to read from, 0 thru 3
+          param: :adcnum The single-ended ADC to read from, 0 thru 3
         """
         self._buffer = bytearray(2)
-        if self._dacenable:
+        if self._dac_enabled:
             self._buffer[0] = _PCF8591_ENABLE_DAC
             self._buffer[1] = self._dacval
 
-        # adcnum cannot be larger than 3
-        adcnum = min(adcnum, 3)
-        self._buffer[0] |= adcnum & 0x3
+        # adc_channel cannot be larger than 3
+        adc_channel = min(adc_channel, 3)
+        self._buffer[0] |= adc_channel & 0x3
+        # TODO: Add an Argument error raise here
 
         with self.i2c_device as i2c:
             i2c.write_then_readinto(self._buffer, self._buffer)
         return unpack_from(">B", self._buffer[1:])[0]
 
+    @property
+    def dac_enabled(self):
+        """ Enables the DAC when True, or sets it to tri-state / high-Z when False
+        """
+        return self._dac_enabled
 
-# /**
-#  * Initialises the I2C bus, and finds the PCF8591 on the bus
-#  *
-#  * @param i2caddr   The I2C address to use for the sensor.
-#  * @param  *theWire Optional wire interface, defaults to &Wire
-#  * @return True if initialisation was successful, otherwise False.
-#  */
-# bool Adafruit_PCF8591::begin(uint8_t i2caddr, TwoWire *theWire) :
-#   if (self.i2c_device) :
-#     delete self.i2c_device; // remove old interface
-#   }
+    @dac_enabled.setter
+    def dac_enabled(self, enable_dac):
 
-#   self.i2c_device = new Adafruit_I2CDevice(i2caddr, theWire);
+        self._dac_enabled = enable_dac
+        self.analog_write(self._dacval)
 
-#   if (!self.i2c_device->begin()) :
-#     return false;
-#   }
+    def analog_write(self, value):
+        """Writes a uint8_t value to the DAC output
 
-#   return true;
-# }
+      param: :output The value to write: 0 is GND and 255 is VCC
 
+      """
 
-# void Adafruit_PCF8591::enableDAC(bool enable) :# /**
-# """ Enables the DAC output or sets it to tri-state / high-Z"""
-#  *
-#  * @param enable Flag for desired DAC state
-#  */
-#   self._dacenable = enable;
-#   this->analogWrite(_dacval);
-# }
-
-
-# void Adafruit_PCF8591::analogWrite(uint8_t output) :# /**
-#  * Writes a uint8_t value to the DAC output
-#  *
-#  * @param output The value to write: 0 is GND and 255 is VCC
-#  */
-#   uint8_t self._buffer[2] = :0, 0};
-#   if (self._dacenable) :
-#     self._buffer[0] = _PCF8591_ENABLE_DAC;
-#     self._buffer[1] = output;
-#   }
-#   _dacval = output;
-#   self.i2c_device->write(self._buffer, 2);
-# }
+        self._buffer = bytearray(2)
+        if self._dac_enabled:
+            self._buffer[0] = _PCF8591_ENABLE_DAC
+            self._buffer[1] = value
+        self._dacval = value
+        with self.i2c_device as i2c:
+            i2c.write_then_readinto(self._buffer, self._buffer)

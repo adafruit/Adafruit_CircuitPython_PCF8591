@@ -15,9 +15,6 @@ while True:
         read_value = pcf.analog_read(channel_number)
         scaled_value = (read_value / 255) * VOLTAGE_LEVEL
 
-        print(
-            "Channel: %d %0.2fV"
-            % (channel_number, scaled_value)
-        )
+        print("Channel: %d %0.2fV" % (channel_number, scaled_value))
     print("")
     time.sleep(1)
