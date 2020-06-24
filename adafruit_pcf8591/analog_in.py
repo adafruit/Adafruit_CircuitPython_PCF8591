@@ -35,22 +35,34 @@ class AnalogIn:
         """AnalogIn
 
         :param ads: The PCF8591 object.
-        :param ~digitalio.DigitalInOut pin: Required pin for single-ended.
+        :param ~digitalio.DigitalInOut pin: Required ADC channel pin.
 
         """
         self._pcf = pcf
         self._channel_number = pin
 
     @property
+    def voltage(self):
+        """Returns the value of an ADC channel in volts as compared to the reference voltage."""
+
+        if not self._pcf:
+            raise RuntimeError(
+                "Underlying ADC does not exist, likely due to callint `deinit`"
+            )
+        raw_reading = self._pcf.read(self._channel_number)
+        return ((raw_reading << 8) / 65535) * self._pcf.reference_voltage
+
+    @property
     def value(self):
-        """Returns the value of an ADC pin scaled to a 16-bit integer from the native value."""
+        """Returns the value of an ADC channel.
+        The value is scaled to a 16-bit integer from the native 8-bit value."""
 
         if not self._pcf:
             raise RuntimeError(
                 "Underlying ADC does not exist, likely due to callint `deinit`"
             )
 
-        return self._pcf.analog_read(self._channel_number) << 8
+        return self._pcf.read(self._channel_number) << 8
 
     @property
     def reference_voltage(self):

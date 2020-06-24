@@ -73,7 +73,7 @@ class PCF8591:
         An ADC value of 65535 will equal `reference_voltage`"""
         return self._reference_voltage
 
-    def analog_read(self, channel):
+    def read(self, channel):
         """Read an analog value from one of the four ADC inputs
 
           param: :adcnum The single-ended ADC to read from, 0 thru 3
@@ -103,9 +103,9 @@ class PCF8591:
     def dac_enabled(self, enable_dac):
 
         self._dac_enabled = enable_dac
-        self.analog_write(self._dacval)
+        self.write(self._dacval)
 
-    def analog_write(self, value):
+    def write(self, value):
         """Writes a uint8_t value to the DAC output
 
       param: :output The value to write: 0 is GND and 65535 is VCC

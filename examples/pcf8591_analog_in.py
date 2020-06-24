@@ -6,7 +6,18 @@ import board
 import adafruit_pcf8591.pcf8591 as PCF
 from adafruit_pcf8591.analog_in import AnalogIn
 
-VOLTAGE_LEVEL = 3.3
+################ AnalogIn Example #####################
+#
+# This example shows how to use the AnalogIn class provided
+# by the library by creating an AnalogIn instance and using
+# it to measure the voltage at the first ADC channel input
+#
+# Wiring:
+# Connect a voltage source to the first ADC channel, in addition to the
+# normal power and I2C connections. The voltage level should be between 0V/GND and VCC
+#
+########################################
+
 i2c = board.I2C()
 pcf = PCF.PCF8591(i2c)
 

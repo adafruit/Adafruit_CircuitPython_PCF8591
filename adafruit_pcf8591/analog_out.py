@@ -59,7 +59,7 @@ class AnalogOut:
                 "Underlying DAC is disabled, likely due to callint `deinit`"
             )
         # underlying sensor is 8-bit, so scale accordingly
-        self._pcf.analog_write(new_value >> 8)
+        self._pcf.write(new_value >> 8)
         self._value = new_value
 
     def deinit(self):
