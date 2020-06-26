@@ -44,6 +44,7 @@ A3 = const(3)
 
 OUT = const(0)
 
+
 class PCF8591:
     """Driver for the PCF8591 DAC & ADC Combo breakout.
 
@@ -72,38 +73,31 @@ class PCF8591:
         An ADC value of 65535 will equal `reference_voltage`"""
         return self._reference_voltage
 
+    def _half_read(self, channel):
+        if self._dac_enabled:
+            self._buffer[0] = _PCF8591_ENABLE_DAC
+            self._buffer[1] = self._dacval
+        else:
+            self._buffer[0] = 0
+            self._buffer[1] = 0
+
+        self._buffer[0] |= channel & 0x3
+
+        with self.i2c_device as i2c:
+            i2c.write_then_readinto(self._buffer, self._buffer)
+
     def read(self, channel):
         """Read an analog value from one of the four ADC inputs
 
-          param: :adcnum The single-ended ADC to read from, 0 thru 3
+          param: :channel The single-ended ADC channel to read from, 0 thru 3
         """
-        if self._dac_enabled:
-            self._buffer[0] = _PCF8591_ENABLE_DAC
-            self._buffer[1] = self._dacval
-        else:
-            self._buffer[0] = 0
-            self._buffer[1] = 0
-
         if channel < 0 or channel > 3:
             raise ValueError("channel must be from 0-3")
-
-        self._buffer[0] |= channel & 0x3
-
-        with self.i2c_device as i2c:
-            i2c.write_then_readinto(self._buffer, self._buffer)
-
-        if self._dac_enabled:
-            self._buffer[0] = _PCF8591_ENABLE_DAC
-            self._buffer[1] = self._dacval
-        else:
-            self._buffer[0] = 0
-            self._buffer[1] = 0
-        self._buffer[0] |= channel & 0x3
-
-        # final read before render
-
-        with self.i2c_device as i2c:
-            i2c.write_then_readinto(self._buffer, self._buffer)
+        # reads are started on the ACK of the WRITE to the 'register' and
+        # not returned until the read after the _next_ WRITE so we have to
+        # do it twice to get the actual value
+        self._half_read(channel)
+        self._half_read(channel)
 
         return unpack_from(">B", self._buffer[1:])[0]
 
