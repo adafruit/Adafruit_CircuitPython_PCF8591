@@ -20,24 +20,31 @@ i2c = board.I2C()
 pcf = PCF8591(i2c)
 print("enabling DAC")
 pcf.dac_enabled = True
+
 while True:
     print("Setting DAC to", 255)
     pcf.write(255)
-    print("Reading channel 0")
+
     read_value = pcf.read(0)
     scaled_value = (read_value / 255) * pcf.reference_voltage
-
     print("Channel 0: %0.2fV" % (scaled_value))
     print("")
-    time.sleep(0.5)
+    time.sleep(0.2)
+
+    print("Setting DAC to", 127)
+    pcf.write(127)
+
+    read_value = pcf.read(0)
+    scaled_value = (read_value / 255) * pcf.reference_voltage
+    print("Channel 0: %0.2fV" % (scaled_value))
+    print("")
+    time.sleep(0.2)
+
     print("Setting DAC to", 0)
     pcf.write(0)
 
-    print("Reading channel 0")
     read_value = pcf.read(0)
     scaled_value = (read_value / 255) * pcf.reference_voltage
-
-    print("Channel 3: %0.2fV" % (scaled_value))
+    print("Channel 0: %0.2fV" % (scaled_value))
     print("")
-
-    time.sleep(1.0)
+    time.sleep(0.2)
