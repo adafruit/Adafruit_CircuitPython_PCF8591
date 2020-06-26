@@ -26,8 +26,6 @@ Implementation Notes
  * Adafruit's Register library: https://github.com/adafruit/Adafruit_CircuitPython_Register
 """
 
-# imports
-
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_PCF8591.git"
 # from time import sleep
@@ -39,13 +37,12 @@ _PCF8591_DEFAULT_ADDR = const(0x48)  # PCF8591 Default Address
 _PCF8591_ENABLE_DAC = const(0x40)  # control bit for having the DAC active
 
 # Pin constants
-A0 = 0
-A1 = 1
-A2 = 2
-A3 = 3
+A0 = const(0)
+A1 = const(1)
+A2 = const(2)
+A3 = const(3)
 
-OUT = 0
-
+OUT = const(0)
 
 class PCF8591:
     """Driver for the PCF8591 DAC & ADC Combo breakout.
@@ -66,6 +63,8 @@ class PCF8591:
             raise ValueError("reference_voltage must be from 2.5 - 6.0")
         self._buffer = bytearray(2)
         print("self.reference_voltage = ", self.reference_voltage)
+        # possibly measure each channel here to prep readings for
+        # user calls to `read`
 
     @property
     def reference_voltage(self):
@@ -78,20 +77,34 @@ class PCF8591:
 
           param: :adcnum The single-ended ADC to read from, 0 thru 3
         """
-        self._buffer = bytearray(2)
         if self._dac_enabled:
             self._buffer[0] = _PCF8591_ENABLE_DAC
             self._buffer[1] = self._dacval
+        else:
+            self._buffer[0] = 0
+            self._buffer[1] = 0
 
         if channel < 0 or channel > 3:
             raise ValueError("channel must be from 0-3")
-        # adc_channel cannot be larger than 3
-        channel = min(channel, 3)
+
         self._buffer[0] |= channel & 0x3
-        # TODO: Add an Argument error raise here
 
         with self.i2c_device as i2c:
             i2c.write_then_readinto(self._buffer, self._buffer)
+
+        if self._dac_enabled:
+            self._buffer[0] = _PCF8591_ENABLE_DAC
+            self._buffer[1] = self._dacval
+        else:
+            self._buffer[0] = 0
+            self._buffer[1] = 0
+        self._buffer[0] |= channel & 0x3
+
+        # final read before render
+
+        with self.i2c_device as i2c:
+            i2c.write_then_readinto(self._buffer, self._buffer)
+
         return unpack_from(">B", self._buffer[1:])[0]
 
     @property
