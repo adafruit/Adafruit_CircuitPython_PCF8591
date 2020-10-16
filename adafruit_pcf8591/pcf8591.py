@@ -63,7 +63,6 @@ class PCF8591:
         else:
             raise ValueError("reference_voltage must be from 2.5 - 6.0")
         self._buffer = bytearray(2)
-        print("self.reference_voltage = ", self.reference_voltage)
         # possibly measure each channel here to prep readings for
         # user calls to `read`
 
