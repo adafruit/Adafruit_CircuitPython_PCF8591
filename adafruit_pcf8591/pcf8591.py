@@ -88,7 +88,7 @@ class PCF8591:
     def read(self, channel):
         """Read an analog value from one of the four ADC inputs
 
-          param: :channel The single-ended ADC channel to read from, 0 thru 3
+        param: :channel The single-ended ADC channel to read from, 0 thru 3
         """
         if channel < 0 or channel > 3:
             raise ValueError("channel must be from 0-3")
@@ -114,9 +114,9 @@ class PCF8591:
     def write(self, value):
         """Writes a uint8_t value to the DAC output
 
-      param: :output The value to write: 0 is GND and 65535 is VCC
+        param: :output The value to write: 0 is GND and 65535 is VCC
 
-      """
+        """
 
         self._buffer = bytearray(2)
         if self._dac_enabled:
