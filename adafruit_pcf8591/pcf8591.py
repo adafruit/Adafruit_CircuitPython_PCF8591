@@ -31,7 +31,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_PCF8591.git"
 # from time import sleep
 from struct import unpack_from
 from micropython import const
-import adafruit_bus_device.i2c_device as i2c_device
+from adafruit_bus_device import i2c_device
 
 _PCF8591_DEFAULT_ADDR = const(0x48)  # PCF8591 Default Address
 _PCF8591_ENABLE_DAC = const(0x40)  # control bit for having the DAC active
