@@ -102,7 +102,7 @@ class PCF8591:
 
     @property
     def dac_enabled(self):
-        """ Enables the DAC when True, or sets it to tri-state / high-Z when False"""
+        """Enables the DAC when True, or sets it to tri-state / high-Z when False"""
         return self._dac_enabled
 
     @dac_enabled.setter
