@@ -14,7 +14,8 @@ from adafruit_pcf8591.pcf8591 import PCF8591
 # normal power and I2C connections. The voltage level should be between 0V/GND and VCC
 #
 ########################################
-i2c = board.I2C()
+i2c = board.I2C()  # uses board.SCL and board.SDA
+# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 pcf = PCF8591(i2c)
 
 channel_a = 0
