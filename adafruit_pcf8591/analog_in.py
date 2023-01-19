@@ -27,11 +27,16 @@ AnalogIn for ADC readings.
 * Author(s): Bryan Siepert, adpted from ADS1x15 by Carter Nelson
 """
 
+try:
+    import typing  # pylint: disable=unused-import
+except ImportError:
+    pass
+
 
 class AnalogIn:
     """AnalogIn Mock Implementation for ADC Reads."""
 
-    def __init__(self, pcf, pin):
+    def __init__(self, pcf: "PCF8591", pin: int) -> None:
         """AnalogIn
 
         :param ads: The PCF8591 object.
@@ -42,38 +47,38 @@ class AnalogIn:
         self._channel_number = pin
 
     @property
-    def voltage(self):
+    def voltage(self) -> float:
         """Returns the value of an ADC channel in volts as compared to the reference voltage."""
 
         if not self._pcf:
             raise RuntimeError(
-                "Underlying ADC does not exist, likely due to callint `deinit`"
+                "Underlying ADC does not exist, likely due to calling `deinit`"
             )
         raw_reading = self._pcf.read(self._channel_number)
         return ((raw_reading << 8) / 65535) * self._pcf.reference_voltage
 
     @property
-    def value(self):
+    def value(self) -> int:
         """Returns the value of an ADC channel.
         The value is scaled to a 16-bit integer from the native 8-bit value."""
 
         if not self._pcf:
             raise RuntimeError(
-                "Underlying ADC does not exist, likely due to callint `deinit`"
+                "Underlying ADC does not exist, likely due to calling `deinit`"
             )
 
         return self._pcf.read(self._channel_number) << 8
 
     @property
-    def reference_voltage(self):
+    def reference_voltage(self) -> float:
         """The maximum voltage measurable (also known as the reference voltage) as a float in
         Volts. Assumed to be 3.3V but can be overridden using the `PCF8591` constructor"""
         if not self._pcf:
             raise RuntimeError(
-                "Underlying ADC does not exist, likely due to callint `deinit`"
+                "Underlying ADC does not exist, likely due to calling `deinit`"
             )
         return self._pcf.reference_voltage
 
-    def deinit(self):
+    def deinit(self) -> None:
         """Release the reference to the PCF8591. Create a new AnalogIn to use it again."""
         self._pcf = None

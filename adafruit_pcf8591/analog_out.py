@@ -26,12 +26,15 @@ AnalogOut for setting the included DAC to a given voltage.
 
 * Author(s): Bryan Siepert
 """
-
+try:
+    import typing  # pylint: disable=unused-import
+except ImportError:
+    pass
 
 class AnalogOut:
     """AnalogIn Mock Implementation for ADC Reads."""
 
-    def __init__(self, pcf, dac_pin=0):
+    def __init__(self, pcf: "PCF8591", dac_pin: int = 0) -> None:
         """AnalogIn
 
         :param pcf: The pcf object.
@@ -45,24 +48,24 @@ class AnalogOut:
         self._pcf.dac_enabled = True
 
     @property
-    def value(self):
+    def value(self) -> int:
         """Returns the currently set value of the DAC pin as an integer."""
         return self._value
 
     @value.setter
-    def value(self, new_value):  # this may have to scale from 16-bit
+    def value(self, new_value: int) -> None:  # this may have to scale from 16-bit
         if new_value < 0 or new_value > 65535:
             raise ValueError("value must be a 16-bit integer from 0-65535")
 
         if not self._pcf.dac_enabled:
             raise RuntimeError(
-                "Underlying DAC is disabled, likely due to callint `deinit`"
+                "Underlying DAC is disabled, likely due to calling `deinit`"
             )
         # underlying sensor is 8-bit, so scale accordingly
         self._pcf.write(new_value >> 8)
         self._value = new_value
 
-    def deinit(self):
+    def deinit(self) -> None:
         """Disable the underlying DAC and release the reference to the PCF8591.
         Create a new AnalogOut to use it again."""
         self._pcf.dac_enabled = False
