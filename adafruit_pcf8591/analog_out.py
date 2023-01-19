@@ -31,6 +31,7 @@ try:
 except ImportError:
     pass
 
+
 class AnalogOut:
     """AnalogIn Mock Implementation for ADC Reads."""
 
