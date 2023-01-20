@@ -40,7 +40,7 @@ class AnalogOut:
         """AnalogIn
 
         :param pcf: The pcf object.
-        :param int pin: Required pin must be A0
+        :param adafruit_pcf8591.pcf8591.A0 pin: Required pin must be A0
 
         """
         self._pcf = pcf
