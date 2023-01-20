@@ -29,6 +29,7 @@ AnalogIn for ADC readings.
 
 try:
     import typing  # pylint: disable=unused-import
+    from adafruit_pcf8591.pcf8591.PCF8591 import PCF8591
 except ImportError:
     pass
 
@@ -36,11 +37,11 @@ except ImportError:
 class AnalogIn:
     """AnalogIn Mock Implementation for ADC Reads."""
 
-    def __init__(self, pcf: "PCF8591", pin: int) -> None:
+    def __init__(self, pcf: PCF8591, pin: int) -> None:
         """AnalogIn
 
-        :param ads: The PCF8591 object.
-        :param ~digitalio.DigitalInOut pin: Required ADC channel pin.
+        :param pcf: The PCF8591 object.
+        :param int pin: Required ADC channel pin.
 
         """
         self._pcf = pcf
