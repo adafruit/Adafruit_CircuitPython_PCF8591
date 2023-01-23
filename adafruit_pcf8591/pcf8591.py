@@ -56,7 +56,7 @@ class PCF8591:
     """Driver for the PCF8591 DAC & ADC Combo breakout.
 
     :param ~busio.I2C i2c_bus: The I2C bus the PCF8591 is connected to.
-    :param address: The I2C device address for the sensor. Default is ``0x28``.
+    :param int address: The I2C device address for the sensor. Default is ``0x28``.
 
     """
 
@@ -100,7 +100,7 @@ class PCF8591:
     def read(self, channel: Literal[0, 1, 2, 3]) -> None:
         """Read an analog value from one of the four ADC inputs
 
-        param: int channel: The single-ended ADC channel to read from, 0 thru 3
+        :param int channel: The single-ended ADC channel to read from, 0 thru 3
         """
         if channel < 0 or channel > 3:
             raise ValueError("channel must be from 0-3")
@@ -126,7 +126,7 @@ class PCF8591:
     def write(self, value: int) -> None:
         """Writes a uint8_t value to the DAC output
 
-        param: :output The value to write: 0 is GND and 65535 is VCC
+        :param int value: The value to write: 0 is GND and 65535 is VCC
 
         """
 
