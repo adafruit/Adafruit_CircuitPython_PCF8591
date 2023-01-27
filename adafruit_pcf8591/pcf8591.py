@@ -33,6 +33,13 @@ from struct import unpack_from
 from micropython import const
 from adafruit_bus_device import i2c_device
 
+try:
+    import typing  # pylint: disable=unused-import
+    from typing_extensions import Literal
+    from busio import I2C
+except ImportError:
+    pass
+
 _PCF8591_DEFAULT_ADDR = const(0x48)  # PCF8591 Default Address
 _PCF8591_ENABLE_DAC = const(0x40)  # control bit for having the DAC active
 
@@ -49,11 +56,16 @@ class PCF8591:
     """Driver for the PCF8591 DAC & ADC Combo breakout.
 
     :param ~busio.I2C i2c_bus: The I2C bus the PCF8591 is connected to.
-    :param address: The I2C device address for the sensor. Default is ``0x28``.
+    :param int address: The I2C device address for the sensor. Default is ``0x28``.
 
     """
 
-    def __init__(self, i2c_bus, address=_PCF8591_DEFAULT_ADDR, reference_voltage=3.3):
+    def __init__(
+        self,
+        i2c_bus: I2C,
+        address: int = _PCF8591_DEFAULT_ADDR,
+        reference_voltage: float = 3.3,
+    ) -> None:
         self.i2c_device = i2c_device.I2CDevice(i2c_bus, address)
         self._dacval = 0
         self._dac_enabled = False
@@ -67,12 +79,12 @@ class PCF8591:
         # user calls to `read`
 
     @property
-    def reference_voltage(self):
+    def reference_voltage(self) -> float:
         """The voltage level that ADC signals are compared to.
         An ADC value of 65535 will equal `reference_voltage`"""
         return self._reference_voltage
 
-    def _half_read(self, channel):
+    def _half_read(self, channel: Literal[0, 1, 2, 3]) -> None:
         if self._dac_enabled:
             self._buffer[0] = _PCF8591_ENABLE_DAC
             self._buffer[1] = self._dacval
@@ -85,10 +97,10 @@ class PCF8591:
         with self.i2c_device as i2c:
             i2c.write_then_readinto(self._buffer, self._buffer)
 
-    def read(self, channel):
+    def read(self, channel: Literal[0, 1, 2, 3]) -> None:
         """Read an analog value from one of the four ADC inputs
 
-        param: :channel The single-ended ADC channel to read from, 0 thru 3
+        :param int channel: The single-ended ADC channel to read from, 0 thru 3
         """
         if channel < 0 or channel > 3:
             raise ValueError("channel must be from 0-3")
@@ -101,20 +113,20 @@ class PCF8591:
         return unpack_from(">B", self._buffer[1:])[0]
 
     @property
-    def dac_enabled(self):
+    def dac_enabled(self) -> bool:
         """Enables the DAC when True, or sets it to tri-state / high-Z when False"""
         return self._dac_enabled
 
     @dac_enabled.setter
-    def dac_enabled(self, enable_dac):
+    def dac_enabled(self, enable_dac: bool) -> None:
 
         self._dac_enabled = enable_dac
         self.write(self._dacval)
 
-    def write(self, value):
+    def write(self, value: int) -> None:
         """Writes a uint8_t value to the DAC output
 
-        param: :output The value to write: 0 is GND and 65535 is VCC
+        :param int value: The value to write: 0 is GND and 65535 is VCC
 
         """
 
