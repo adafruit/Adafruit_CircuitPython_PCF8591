@@ -73,7 +73,8 @@ class AnalogIn:
     @property
     def reference_voltage(self) -> float:
         """The maximum voltage measurable (also known as the reference voltage) as a float in
-        Volts. Assumed to be 3.3V but can be overridden using the `PCF8591` constructor"""
+        Volts. Assumed to be 3.3V but can be overridden using the `PCF8591` constructor
+        """
         if not self._pcf:
             raise RuntimeError(
                 "Underlying ADC does not exist, likely due to calling `deinit`"

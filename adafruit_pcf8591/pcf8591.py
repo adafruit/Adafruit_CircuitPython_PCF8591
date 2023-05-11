@@ -119,7 +119,6 @@ class PCF8591:
 
     @dac_enabled.setter
     def dac_enabled(self, enable_dac: bool) -> None:
-
         self._dac_enabled = enable_dac
         self.write(self._dacval)
 

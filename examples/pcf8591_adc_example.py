@@ -22,7 +22,6 @@ channel_a = 0
 channel_b = 1
 
 while True:
-
     read_value = pcf.read(channel_a)
     scaled_value = (read_value / 255) * pcf.reference_voltage
 

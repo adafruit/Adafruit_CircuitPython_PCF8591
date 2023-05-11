@@ -26,7 +26,6 @@ pcf_in_0 = AnalogIn(pcf, PCF.A0)
 pcf_out = AnalogOut(pcf, PCF.OUT)
 
 while True:
-
     print("Setting out to ", 65535)
     pcf_out.value = 65535
     raw_value = pcf_in_0.value
