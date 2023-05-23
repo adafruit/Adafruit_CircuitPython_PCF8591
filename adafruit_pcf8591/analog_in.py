@@ -29,7 +29,7 @@ AnalogIn for ADC readings.
 
 try:
     import typing  # pylint: disable=unused-import
-    from adafruit_pcf8591.pcf8591.PCF8591 import PCF8591
+    from adafruit_pcf8591.pcf8591 import PCF8591
 except ImportError:
     pass
 
