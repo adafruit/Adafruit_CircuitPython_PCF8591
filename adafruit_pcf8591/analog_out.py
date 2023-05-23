@@ -28,7 +28,8 @@ AnalogOut for setting the included DAC to a given voltage.
 """
 try:
     import typing  # pylint: disable=unused-import
-    from adafruit_pcf8591.pcf8591.PCF8591 import PCF8591
+    from typing_extensions import Literal
+    from adafruit_pcf8591.pcf8591 import PCF8591
 except ImportError:
     pass
 
@@ -36,11 +37,11 @@ except ImportError:
 class AnalogOut:
     """AnalogIn Mock Implementation for ADC Reads."""
 
-    def __init__(self, pcf: PCF8591, dac_pin: int = 0) -> None:
+    def __init__(self, pcf: PCF8591, dac_pin: Literal[0] = 0) -> None:
         """AnalogIn
 
         :param pcf: The pcf object.
-        :param int pin: Required pin must be adafruit_pcf8591.pcf8591.A0
+        :param int dac_pin: Required pin must be adafruit_pcf8591.pcf8591.A0
 
         """
         self._pcf = pcf

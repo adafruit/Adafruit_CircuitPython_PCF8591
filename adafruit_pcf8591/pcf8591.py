@@ -97,7 +97,7 @@ class PCF8591:
         with self.i2c_device as i2c:
             i2c.write_then_readinto(self._buffer, self._buffer)
 
-    def read(self, channel: Literal[0, 1, 2, 3]) -> None:
+    def read(self, channel: Literal[0, 1, 2, 3]) -> int:
         """Read an analog value from one of the four ADC inputs
 
         :param int channel: The single-ended ADC channel to read from, 0 thru 3
