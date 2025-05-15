@@ -30,13 +30,15 @@ __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_PCF8591.git"
 # from time import sleep
 from struct import unpack_from
-from micropython import const
+
 from adafruit_bus_device import i2c_device
+from micropython import const
 
 try:
-    import typing  # pylint: disable=unused-import
-    from typing_extensions import Literal
+    import typing
+
     from busio import I2C
+    from typing_extensions import Literal
 except ImportError:
     pass
 
