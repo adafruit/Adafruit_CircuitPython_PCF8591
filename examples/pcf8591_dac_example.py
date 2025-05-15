@@ -3,7 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 import time
+
 import board
+
 from adafruit_pcf8591.pcf8591 import PCF8591
 
 ################ read/DAC Example #####################

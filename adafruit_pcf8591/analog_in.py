@@ -28,8 +28,10 @@ AnalogIn for ADC readings.
 """
 
 try:
-    import typing  # pylint: disable=unused-import
+    import typing
+
     from typing_extensions import Literal
+
     from adafruit_pcf8591.pcf8591 import PCF8591
 except ImportError:
     pass
@@ -53,9 +55,7 @@ class AnalogIn:
         """Returns the value of an ADC channel in volts as compared to the reference voltage."""
 
         if not self._pcf:
-            raise RuntimeError(
-                "Underlying ADC does not exist, likely due to calling `deinit`"
-            )
+            raise RuntimeError("Underlying ADC does not exist, likely due to calling `deinit`")
         raw_reading = self._pcf.read(self._channel_number)
         return ((raw_reading << 8) / 65535) * self._pcf.reference_voltage
 
@@ -65,9 +65,7 @@ class AnalogIn:
         The value is scaled to a 16-bit integer from the native 8-bit value."""
 
         if not self._pcf:
-            raise RuntimeError(
-                "Underlying ADC does not exist, likely due to calling `deinit`"
-            )
+            raise RuntimeError("Underlying ADC does not exist, likely due to calling `deinit`")
 
         return self._pcf.read(self._channel_number) << 8
 
@@ -77,9 +75,7 @@ class AnalogIn:
         Volts. Assumed to be 3.3V but can be overridden using the `PCF8591` constructor
         """
         if not self._pcf:
-            raise RuntimeError(
-                "Underlying ADC does not exist, likely due to calling `deinit`"
-            )
+            raise RuntimeError("Underlying ADC does not exist, likely due to calling `deinit`")
         return self._pcf.reference_voltage
 
     def deinit(self) -> None:

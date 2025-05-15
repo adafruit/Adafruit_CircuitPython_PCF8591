@@ -26,9 +26,12 @@ AnalogOut for setting the included DAC to a given voltage.
 
 * Author(s): Bryan Siepert
 """
+
 try:
-    import typing  # pylint: disable=unused-import
+    import typing
+
     from typing_extensions import Literal
+
     from adafruit_pcf8591.pcf8591 import PCF8591
 except ImportError:
     pass
@@ -61,9 +64,7 @@ class AnalogOut:
             raise ValueError("value must be a 16-bit integer from 0-65535")
 
         if not self._pcf.dac_enabled:
-            raise RuntimeError(
-                "Underlying DAC is disabled, likely due to calling `deinit`"
-            )
+            raise RuntimeError("Underlying DAC is disabled, likely due to calling `deinit`")
         # underlying sensor is 8-bit, so scale accordingly
         self._pcf.write(new_value >> 8)
         self._value = new_value
