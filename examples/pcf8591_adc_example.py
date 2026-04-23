@@ -27,14 +27,14 @@ while True:
     read_value = pcf.read(channel_a)
     scaled_value = (read_value / 255) * pcf.reference_voltage
 
-    print("Channel: %d %0.2fV" % (channel_a, scaled_value))
+    print(f"Channel: {channel_a} {scaled_value:0.2f}V")
     print("")
     time.sleep(0.1)
 
     read_value = pcf.read(channel_b)
     scaled_value = (read_value / 255) * pcf.reference_voltage
 
-    print("Channel: %d %0.2fV" % (channel_b, scaled_value))
+    print(f"Channel: {channel_b} {scaled_value:0.2f}V")
     print("")
     print("*" * 20)
     time.sleep(1)

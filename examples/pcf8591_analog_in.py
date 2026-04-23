@@ -28,6 +28,6 @@ while True:
     raw_value = pcf_in_0.value
     scaled_value = (raw_value / 65535) * pcf_in_0.reference_voltage
 
-    print("Pin 0: %0.2fV" % (scaled_value))
+    print(f"Pin 0: {scaled_value:0.2f}V")
     print("")
     time.sleep(1)

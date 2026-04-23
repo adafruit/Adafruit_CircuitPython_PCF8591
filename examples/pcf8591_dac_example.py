@@ -30,7 +30,7 @@ while True:
 
     read_value = pcf.read(0)
     scaled_value = (read_value / 255) * pcf.reference_voltage
-    print("Channel 0: %0.2fV" % (scaled_value))
+    print(f"Channel 0: {scaled_value:0.2f}V")
     print("")
     time.sleep(0.2)
 
@@ -39,7 +39,7 @@ while True:
 
     read_value = pcf.read(0)
     scaled_value = (read_value / 255) * pcf.reference_voltage
-    print("Channel 0: %0.2fV" % (scaled_value))
+    print(f"Channel 0: {scaled_value:0.2f}V")
     print("")
     time.sleep(0.2)
 
@@ -48,6 +48,6 @@ while True:
 
     read_value = pcf.read(0)
     scaled_value = (read_value / 255) * pcf.reference_voltage
-    print("Channel 0: %0.2fV" % (scaled_value))
+    print(f"Channel 0: {scaled_value:0.2f}V")
     print("")
     time.sleep(0.2)
